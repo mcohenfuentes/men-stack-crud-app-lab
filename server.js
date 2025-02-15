@@ -3,6 +3,8 @@ dotenv.config();
 
 const express = require('express');
 const mongoose = require("mongoose");
+const methodOverride = require("method-override"); 
+const morgan = require("morgan")
 
 const app = express();
 
@@ -16,6 +18,8 @@ mongoose.connection.on("connected", () => {
   
   //middleware
   app.use(express.urlencoded({ extended: false }));
+  app.use(methodOverride("_method")); 
+  app.use(morgan("dev"));
 
 app.get("/", async (req, res) => {
     res.render('index.ejs');
@@ -31,6 +35,11 @@ app.get("/", async (req, res) => {
     res.render('cheeses/new.ejs');
   });
 
+  app.get("/cheeses/:cheeseId", async (req, res) => {
+    const foundCheese = await Cheese.findById(req.params.cheeseId)
+    res.render("cheeses/show.ejs", { cheese: foundCheese });
+  });
+
   app.post("/cheeses", async (req, res) => {
     if (req.body.isStinky === "on") {
       req.body.isStinky = true;
@@ -41,6 +50,10 @@ app.get("/", async (req, res) => {
     res.redirect("/cheeses");
   });
 
+  app.delete("/cheeses/:cheeseId", async (req, res) => {
+    await Cheese.findByIdAndDelete(req.params.cheeseId);
+    res.redirect("/cheeses");
+  });
 
 app.listen(3000, () => {
   console.log('Listening on port 3000');
