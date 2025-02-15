@@ -8,15 +8,14 @@
   <body>
     <a href="/cheeses/">Back to Cheeses</a>
     <h1><%= cheese.name %></h1> 
+    <a href="/cheeses/<%= cheese._id %>/edit">Edit <%= cheese.name %></a>
     <% if (cheese.isStinky) { %>
         <p>This cheese is a real stinker!</p>
       <% } else { %>
         <p>This cheese is boring</p>
       <% } %>
       <form action="/cheeses/<%=cheese._id%>?_method=DELETE" method="POST">
-       <div>
         <button type="submit">Delete <%= cheese.name %></button>
-    </div> 
     </form>
   </body>
 </html>

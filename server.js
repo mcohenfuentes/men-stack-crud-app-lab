@@ -19,7 +19,7 @@ mongoose.connection.on("connected", () => {
   //middleware
   app.use(express.urlencoded({ extended: false }));
   app.use(methodOverride("_method")); 
-  app.use(morgan("dev"));
+//   app.use(morgan("dev"));
 
 app.get("/", async (req, res) => {
     res.render('index.ejs');
@@ -40,6 +40,7 @@ app.get("/", async (req, res) => {
     res.render("cheeses/show.ejs", { cheese: foundCheese });
   });
 
+
   app.post("/cheeses", async (req, res) => {
     if (req.body.isStinky === "on") {
       req.body.isStinky = true;
@@ -50,9 +51,25 @@ app.get("/", async (req, res) => {
     res.redirect("/cheeses");
   });
 
+  app.get("/cheeses/:cheeseId/edit", async (req, res) => {
+    const foundCheese = await Cheese.findById(req.params.cheeseId);
+    res.render('cheeses/edit.ejs', { cheese : foundCheese})
+  })
+
+
   app.delete("/cheeses/:cheeseId", async (req, res) => {
     await Cheese.findByIdAndDelete(req.params.cheeseId);
     res.redirect("/cheeses");
+  });
+
+  app.put("/cheeses/:cheeseId", async (req, res) => {
+    if (req.body.isStinky === "on") {
+      req.body.isStinky = true;
+    } else {
+      req.body.isStinky = false;
+    }
+    await Cheese.findByIdAndUpdate(req.params.cheeseId, req.body);
+    res.redirect(`/cheeses/${req.params.cheeseId}`);
   });
 
 app.listen(3000, () => {
