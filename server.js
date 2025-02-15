@@ -12,8 +12,14 @@ mongoose.connection.on("connected", () => {
     console.log(`Connected to MongoDB ${mongoose.connection.name}.`);
   });
 
+  const Cheese = require("./models/cheese.js");
+
 app.get("/", async (req, res) => {
     res.render('index.ejs');
+  });
+
+  app.get("/cheeses/new", (req, res) => {
+    res.render('cheeses/new.ejs');
   });
 
 app.listen(3000, () => {
