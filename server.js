@@ -38,8 +38,7 @@ app.get("/", async (req, res) => {
       req.body.isStinky = false;
     }
     await Cheese.create(req.body);
-    res.redirect("/cheeses/new");
-    console.log(req.body);
+    res.redirect("/cheeses");
   });
 
 
